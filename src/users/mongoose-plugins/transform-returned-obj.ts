@@ -1,6 +1,6 @@
 import { UserSchema } from "../schemas/user.schema";
 
-module.exports = function transformReturnedObj() {
+export function transformReturnedObj() {
   UserSchema.set("toJSON", {
     transform: (doc, ret, opt) => {
       delete ret.password;

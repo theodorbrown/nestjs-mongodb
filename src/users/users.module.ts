@@ -3,6 +3,7 @@ import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { User, UserSchema } from "./schemas/user.schema";
+import * as plugin from "./mongoose-plugins/index";
 
 @Module({
   //MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])
@@ -12,12 +13,12 @@ import { User, UserSchema } from "./schemas/user.schema";
         name: User.name,
         useFactory: () => {
           const schema = UserSchema;
-          schema.plugin(require("./mongoose-plugins/transform-returned-obj"));
-          schema.plugin(require("./mongoose-plugins/computed-prop"));
-          schema.plugin(require("./mongoose-plugins/pre-save-hook"));
-          schema.plugin(require("./mongoose-plugins/compare-pwd"));
-          schema.plugin(require("./mongoose-plugins/inc-login-attemps"));
-          schema.plugin(require("./mongoose-plugins/auth-user"));
+          schema.plugin(plugin.transformReturnedObj);
+          schema.plugin(plugin.computedPropIsLocked);
+          schema.plugin(plugin.preSave);
+          schema.plugin(plugin.comparePassword);
+          schema.plugin(plugin.incLoginAttempts);
+          schema.plugin(plugin.getAuthenticated);
           return schema;
         }
       }

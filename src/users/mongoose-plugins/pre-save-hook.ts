@@ -4,7 +4,7 @@ import { PreconditionFailedException } from "@nestjs/common";
 
 const SALT_WORK_FACTOR: number = 10;
 // Pre save hook
-module.exports = function preSave() {
+export function preSave() {
   UserSchema.pre("save", function(next) {
     let user = this;
     if (!(user.password === user.confirm)) {

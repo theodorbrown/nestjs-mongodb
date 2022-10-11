@@ -1,8 +1,9 @@
 import { UserSchema } from "../schemas/user.schema";
 
-module.exports = function getAuthenticated() {
+export function getAuthenticated() {
   // Static func for auth user coming from Mongo doc
-  UserSchema.statics.getAuthenticated = async function(email, password) {
+  //Static doesn't depend on user instance
+  UserSchema.static("getAuthenticated", async function(email, password) {
     const user = await this.findOne({ email: email });
     // make sure the user exists
     if (!user) {
@@ -29,5 +30,5 @@ module.exports = function getAuthenticated() {
       user.incLoginAttempts();
       return null;
     }
-  };
+  });
 };
