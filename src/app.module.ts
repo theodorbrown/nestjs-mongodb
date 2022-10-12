@@ -7,6 +7,7 @@ import { IdeasModule } from './ideas/ideas.module';
 import { MongooseModule } from "@nestjs/mongoose";
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { AddressesModule } from './addresses/addresses.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
     IdeasModule,
     UsersModule,
     AuthModule,
+    AddressesModule,
   ],//imports cannot use providers specified here in this module, they have to provide there one
   controllers: [AppController],//controllers are in same module when written here, so they can use providers
   providers: [AppService]
