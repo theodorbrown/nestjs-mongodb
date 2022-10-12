@@ -26,7 +26,7 @@ export class UsersService {
   }
 
   async findOneById(id: string | Types.ObjectId): Promise<User> {
-    return this.userModel.findOne({ _id: id }).exec();
+    return this.userModel.findOne({ _id: id }).populate("addresses").exec();
   }
 
   async findOneByEmail(email: string): Promise<User> {
