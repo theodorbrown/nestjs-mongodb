@@ -34,6 +34,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string;
 
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  profileImage: string
+
   @IsNumber()
   @IsNotEmpty()
   age: number;
@@ -53,13 +58,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   phone: string
 
-  //on imbrique l'adresse car elle n'est pas extensible?
   @IsMongoId()
   @IsArray()
   @IsOptional()
   addresses: [Types.ObjectId]
 
-  //on imbrique pas c'est sûre
   @IsMongoId()
   @IsOptional()
   wishList: Types.ObjectId

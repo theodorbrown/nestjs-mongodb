@@ -3,19 +3,19 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { HelmetMiddleware } from "@nest-middlewares/helmet";
 import * as cors from "cors";
-import { IdeasModule } from './ideas/ideas.module';
 import { MongooseModule } from "@nestjs/mongoose";
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AddressesModule } from './addresses/addresses.module';
+import { ImagesModule } from './images/images.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost/nestjs-db'),
-    IdeasModule,
     UsersModule,
     AuthModule,
     AddressesModule,
+    ImagesModule,
   ],//imports cannot use providers specified here in this module, they have to provide there one
   controllers: [AppController],//controllers are in same module when written here, so they can use providers
   providers: [AppService]

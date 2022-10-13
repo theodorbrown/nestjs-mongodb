@@ -2,6 +2,9 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document, Types } from "mongoose";
 import { Roles } from "../roles/roles.enum";
 import { Address } from "../../addresses/schemas/address.schema";
+import * as dotenv from "dotenv";
+
+dotenv.config()
 
 export type UserDocument = User & Document;
 
@@ -23,6 +26,9 @@ export class User {
 
   @Prop({ required: true })
   lastName: string;
+
+  @Prop({ required: true, default: process.env.USER_DEFAULT_IMG })
+  profileImage: string
 
   @Prop({ required: true })
   age: number;

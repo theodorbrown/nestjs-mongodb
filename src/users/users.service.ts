@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { User, UserDocument } from "./schemas/user.schema";
-import { Connection, Model, Types } from "mongoose";
+import { Connection, Model } from "mongoose";
 import { CreateUserDto } from "./dto/create-user.dto";
 
 
@@ -14,7 +14,7 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const userExist = await this.findOneByEmail(createUserDto.email);
+    const userExist = await this.findOne({email: createUserDto.email});
     if (!userExist) {
       return this.userModel.create(createUserDto);
     }
@@ -25,17 +25,18 @@ export class UsersService {
     return this.userModel.find().exec();
   }
 
-  async findOneById(id: string | Types.ObjectId): Promise<User> {
-    return this.userModel.findOne({ _id: id }).populate("addresses").exec();
+  async findOne(filter: any): Promise<User> {
+    return this.userModel.findOne(filter).populate("addresses").exec();
   }
 
-  async findOneByEmail(email: string): Promise<User> {
-    return this.userModel.findOne({ email: email }).exec();
-  }
 
   async delete(id: string) {
     return await this.userModel
       .findByIdAndRemove({ _id: id })
       .exec();
+  }
+
+  async updateOne(filter: any, field: any){
+    await this.userModel.updateOne(filter, field).exec();
   }
 }

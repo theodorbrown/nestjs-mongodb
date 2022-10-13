@@ -15,7 +15,7 @@ export class AddressesService {
 
   async create(createAddressDto: CreateAddressDto): Promise<Address> {
     const address = await this.addressModel.create(createAddressDto);
-    const user = await this.usersService.findOneById(createAddressDto.userId);
+    const user = await this.usersService.findOne({_id: createAddressDto.userId});
     // @ts-ignore
     await user.updateOne({
       $push:
