@@ -13,8 +13,8 @@ export class AddressesService {
   ) {
   }
 
-  async create(createAddressDto: CreateAddressDto): Promise<Address> {
-    const address = await this.addressModel.create(createAddressDto);
+  async create(createAddressDto: CreateAddressDto, userId: string): Promise<Address> {
+    const address = await this.addressModel.create({ ...createAddressDto, userId });
     const populatedAddress = await address.populate("userId");
     const user = populatedAddress.userId;
     // @ts-ignore

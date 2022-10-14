@@ -19,7 +19,7 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const userExist = this.userModel.findOne({ email: createUserDto.email })
+    const userExist = await this.userModel.findOne({ email: createUserDto.email })
     if (!userExist) {
       return this.userModel.create(createUserDto);
     }
@@ -34,7 +34,7 @@ export class UsersService {
     const userExist = await this.userModel.findOne(filter).populate("addresses").exec();
     if(userExist)
       return userExist;
-    throw new NotFoundException("Operation canceled.", "User not found.")
+    throw new NotFoundException("Operation canceled.", "User not found.");
   }
 
   async delete(id: string) {

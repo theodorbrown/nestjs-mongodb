@@ -27,7 +27,7 @@ export class ImagesController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post("upload")
+  @Post()
   @UseInterceptors(FileInterceptor("file", storage))
   uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req) {
     const userId = req.user._id;
@@ -35,15 +35,15 @@ export class ImagesController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete("delete")
+  @Delete()
   deleteFile(@Req() req) {
     const userId = req.user._id;
     return this.imageService.deleteFile(userId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('get')
-  @Header('Content-Type', 'image/jpeg')
+  @Get()
+  //@Header('Content-Type', 'image/jpeg')
   getFile(@Req() req){
     const userId = req.user._id;
     return this.imageService.getFile(userId);

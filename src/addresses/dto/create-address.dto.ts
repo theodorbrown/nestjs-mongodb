@@ -28,7 +28,4 @@ export class CreateAddressDto {
   @IsString()
   @IsNotEmpty()
   country: string
-
-  @IsMongoId()
-  userId: Types.ObjectId
 }

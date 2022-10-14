@@ -23,7 +23,6 @@ export class ImagesService {
     return this.handleFiles(userId, null);
   }
 
-
   async getFile(userId): Promise<StreamableFile> {
     let user = await this.userService.findOne({ _id: userId });
     const profileImg = user.profileImage;
@@ -32,18 +31,22 @@ export class ImagesService {
   };
 
   //helper
+  //uploads even if user doesn't exist
   async handleFiles(userId: string, fileName: string) {
     let user = await this.userService.findOne({ _id: userId });
     if (user.profileImage !== process.env.USER_DEFAULT_IMG)
       await unlink(process.env.IMAGES_PATH + user.profileImage);
 
     let profileImg = process.env.USER_DEFAULT_IMG;
-    if (fileName)
+    let returnMsg = "Delete";
+    if (fileName){
+      returnMsg = "Upload"
       profileImg = fileName;
+    }
 
     //@ts-ignore
     await user.updateOne({ profileImage: profileImg });
 
-    return { message: 'Done.' }
+    return { message: returnMsg + ' done.' }
   }
 }

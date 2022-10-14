@@ -1,32 +1,41 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from "@nestjs/common";
 import { CreateAddressDto } from "./dto/create-address.dto";
 import { AddressesService } from "./addresses.service";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { RolesGuard } from "../auth/guards/roles.guard";
 
 @Controller("addresses")
 export class AddressesController {
   constructor(private readonly addressesService: AddressesService) {
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createAddressDto: CreateAddressDto) {
-    return this.addressesService.create(createAddressDto);
+  create(@Body() createAddressDto: CreateAddressDto, @Request() req) {
+    const userId = req.user._id;
+    return this.addressesService.create(createAddressDto, userId);
   }
 
-  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get("all_for_admin")
   async findAll() {
     return this.addressesService.findAll();
   }
 
-  @Get("user/:usrId")
-  async findByUser(@Param("usrId") usrId: string) {
-    return this.addressesService.findByUser(usrId);
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async findByUser(@Request() req) {
+    const userId = req.user._id;
+    return this.addressesService.findByUser(userId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(":id")
   async findOne(@Param("id") id: string) {
     return this.addressesService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(":id")
   async delete(@Param("id") id: string) {
     return this.addressesService.deleteOne(id);
