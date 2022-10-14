@@ -41,8 +41,9 @@ export class ImagesService {
     if (fileName)
       profileImg = fileName;
 
-    await this.userService.updateOne({ _id: userId }, { profileImage: profileImg });
+    //@ts-ignore
+    await user.updateOne({ profileImage: profileImg });
 
-    return await this.userService.findOne({ _id: userId });
+    return { message: 'Done.' }
   }
 }

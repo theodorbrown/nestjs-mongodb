@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { ImagesModule } from './images/images.module';
+import { HelpersModule } from './helpers/helpers.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ImagesModule } from './images/images.module';
     AuthModule,
     AddressesModule,
     ImagesModule,
+    HelpersModule,
   ],//imports cannot use providers specified here in this module, they have to provide there one
   controllers: [AppController],//controllers are in same module when written here, so they can use providers
   providers: [AppService]

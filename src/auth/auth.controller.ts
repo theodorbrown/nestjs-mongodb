@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Request, Get, Headers, Ip } from "@nestjs/common";
+import { Controller, Post, UseGuards, Request, Get, Headers, Ip, Body } from "@nestjs/common";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
@@ -28,13 +28,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('register')
   @Roles('admin')
-  async register(createUserDto: CreateUserDto) {
+  async register(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto);
-  }
-
-  @Post('test')
-  testOut(@Ip() ip) {
-    console.log(ip)
-    return 'ok';
   }
 }

@@ -29,6 +29,6 @@ export class AddressesController {
 
   @Delete(":id")
   async delete(@Param("id") id: string) {
-    return this.addressesService.delete(id);
+    return this.addressesService.deleteOne(id);
   }
 }

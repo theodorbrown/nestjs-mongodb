@@ -1,21 +1,22 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose, { Model, Types } from "mongoose";
+import { Model } from "mongoose";
 import { Address, AddressDocument } from "./schemas/address.schema";
 import { CreateAddressDto } from "./dto/create-address.dto";
-import { UsersService } from "../users/users.service";
+import { HelpersService } from "../helpers/helpers.service";
 
 @Injectable()
 export class AddressesService {
   constructor(
     @InjectModel(Address.name) private addressModel: Model<AddressDocument>,
-    private usersService: UsersService
+    private helpersService: HelpersService
   ) {
   }
 
   async create(createAddressDto: CreateAddressDto): Promise<Address> {
     const address = await this.addressModel.create(createAddressDto);
-    const user = await this.usersService.findOne({_id: createAddressDto.userId});
+    const populatedAddress = await address.populate("userId");
+    const user = populatedAddress.userId;
     // @ts-ignore
     await user.updateOne({
       $push:
@@ -23,9 +24,6 @@ export class AddressesService {
           addresses: address.id
         }
     });
-    //Cela implique :
-    //Si user supprimé => supprimer l'adresse par la table addresse tous les user avec cet id
-    //Si adresse supprimée => supprimer record dans addresses de user et supprimer dans la table adresse tout avec id address
     return address;
   }
 
@@ -35,29 +33,35 @@ export class AddressesService {
   }
 
   async findByUser(usrId: string): Promise<Address[]> {
-    this.checkObjectId(usrId);
+    this.helpersService.checkObjectId(usrId);
     return this.addressModel.find({ userId: usrId }).exec();
     //[] if none
-    //exc if mongoose can't cast to ObjectId
   }
 
   async findOne(id: string): Promise<Address> {
-    this.checkObjectId(id);
+    this.helpersService.checkObjectId(id);
     const address = await this.addressModel.findOne({ _id: id }).exec();
     if (!address)
-      throw new NotFoundException(`Address with id ${id} doesn't exist.`, "Address not found.");
+      throw new NotFoundException(`Operation canceled.`, "Address not found.");
     return address;
   }
 
-  async delete(id: string) {
-    return this.addressModel
-      .findByIdAndRemove({ _id: id })
-      .exec();
-  }
 
-  //helper
-  checkObjectId(id: string) {
-    if (!mongoose.isValidObjectId(id))
-      throw new NotFoundException("Provide a valid ObjectId.", "Invalid ObjectId.");
+  async deleteOne(id: string) {
+    this.helpersService.checkObjectId(id);
+    //1. Delete address in address collection
+    const address = await this.addressModel.findByIdAndRemove({ _id: id }).populate("userId").exec();
+    //2. Delete address ObjectId in array addresses of user collection
+    if (address) {
+      const user = address.userId;
+      //@ts-ignore
+      await user.updateOne({
+        $pull: {
+          addresses: id
+        }
+      });
+      return address;
+    }
+    throw new NotFoundException(`Operation canceled.`, "Address not found.");
   }
 }
