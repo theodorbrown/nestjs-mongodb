@@ -2,6 +2,7 @@
 import { UserSchema } from "../schemas/user.schema";
 
 const MAX_LOGIN_ATTEMPTS: number = 5;
+//2 hours (in ms)
 const LOCK_TIME: number = 2 * 60 * 60 * 1000;
 
 export function incLoginAttempts() {

@@ -1,10 +1,9 @@
-import { Controller, Post, UseGuards, Request, Get, Headers, Ip, Body } from "@nestjs/common";
+import { Controller, Post, UseGuards, Request, Get, Body, HttpStatus, HttpCode } from "@nestjs/common";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
-import { RolesGuard } from "./guards/roles.guard";
-import { Roles } from "./roles.decorator";
 import { CreateUserDto } from "../users/dto/create-user.dto";
+import { RtAuthGuard } from "./guards/rt-auth.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -12,23 +11,32 @@ export class AuthController {
   constructor(private authService: AuthService) {
   }
 
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  async register(@Body() createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto);
+  }
+
   @UseGuards(LocalAuthGuard)
-  //LocalAuthGuard attach PARTIAL user to request
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(@Request() req) {
     return this.authService.login(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logOut(@Request() req){
+    const user = req.user;
+    return this.authService.logOut(user.sub);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Post('register')
-  @Roles('admin')
-  async register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.register(createUserDto);
+  @UseGuards(RtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('refresh')
+  async refreshTokens(@Request() req){
+    const user = req.user;
+    return this.authService.refreshTokens(user.sub, user.refreshToken);
   }
 }

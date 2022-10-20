@@ -55,6 +55,9 @@ export class User {
   @Prop( { type: mongoose.Schema.Types.ObjectId, ref: 'WishList', required: false, default: null})
   wishList: Types.ObjectId
 
+  @Prop({ required: false, default: null })
+  refreshToken: string;
+
   //options are used for validation and throws exception if a prop is missing or email duplicate for example.
   //ExceptionsHandler
 

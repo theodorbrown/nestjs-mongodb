@@ -13,6 +13,10 @@ export function getAuthenticated() {
     if (user.isLocked) {
       // increment login attempts if account lock isn't finished or reset
       user.incLoginAttempts();
+      return {
+        lockUntilInfo: user.lockUntil,
+        loginAttemptsInfo: user.loginAttempts
+      }
       //il ressort sans lock ou avec un lock : le lockuntil
     }
 

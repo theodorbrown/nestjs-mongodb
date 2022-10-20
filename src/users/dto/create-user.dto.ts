@@ -34,11 +34,6 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @IsOptional()
-  profileImage: string
-
   @IsNumber()
   @IsNotEmpty()
   age: number;
@@ -49,21 +44,7 @@ export class CreateUserDto {
   @IsString()
   role: Roles;
 
-  @IsNotEmpty()
-  @IsBoolean()
-  @IsOptional()
-  isPremium: boolean;
-
   @IsString()
   @IsNotEmpty()
   phone: string
-
-  @IsMongoId()
-  @IsArray()
-  @IsOptional()
-  addresses: [Types.ObjectId]
-
-  @IsMongoId()
-  @IsOptional()
-  wishList: Types.ObjectId
 }

@@ -5,26 +5,23 @@ import { jwtConstants } from "../constants";
 import { UsersService } from "../../users/users.service";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private usersService: UsersService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: jwtConstants.secret
+      secretOrKey: jwtConstants.secret,
     });
   }
 
-  //payload decoded JSON from passport
+  //payload = decoded token
   async validate(payload: any) {
-    //Manually check if user exist in db (token valid or not)
+    //payload : email, sub, iat, exp
+    //Manually check if user exist in db. Why? To be sure that user hasn't been deleted even if the token is valid.
     const usrExist = await this.usersService.findOne({ _id: payload.sub });
     if (usrExist)
-      //attach those infos to req
-      return {
-        _id: payload.sub,
-        email: payload.email,
-        role: payload.role
-      };
+      return payload;
     return usrExist;
+    //req.user = usrExist
   }
 }

@@ -26,7 +26,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
     consumer.apply(
       HelmetMiddleware,
-      cors({ origin: "http://localhost:3000" })
+      cors({ origin: ["http://localhost:4200", "http://localhost:3000"] })
     ).forRoutes("");
   }
 }

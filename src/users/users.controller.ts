@@ -15,6 +15,12 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+
+  @Get("exist/:email")
+  async userExist(@Param("email") email): Promise<Boolean> {
+    return this.usersService.userExist(email);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get()
   async findOneById(@Request() req): Promise<User> {

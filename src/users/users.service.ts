@@ -26,14 +26,21 @@ export class UsersService {
     throw new ConflictException("Operation not allowed.", "Email already exists.");
   }
 
+  async userExist(email: string): Promise<boolean> {
+    const userExist = await this.userModel.findOne({ email: email })
+    if (!userExist)
+      return false;
+    return true;
+  }
+
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
   }
 
   async findOne(filter: any) {
-    const userExist = await this.userModel.findOne(filter).populate("addresses").exec();
-    if(userExist)
-      return userExist;
+    const user = await this.userModel.findOne(filter).populate("addresses").exec();
+    if(user)
+      return user;
     throw new NotFoundException("Operation canceled.", "User not found.");
   }
 
