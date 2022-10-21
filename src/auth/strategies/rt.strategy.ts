@@ -12,7 +12,7 @@ export class RtStrategy extends PassportStrategy(Strategy, 'rt') {
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           //rt from cookie
-          return request?.cookies['auth-cookie'].refresh_token
+          return request?.cookies['auth-cookie']?.refresh_token
         }
       ]),
       ignoreExpiration: false,
@@ -24,7 +24,8 @@ export class RtStrategy extends PassportStrategy(Strategy, 'rt') {
 
   //payload is decoded token
   async validate(req: Request, payload: any) {
-    const refreshToken = req.cookies['auth-cookie'].refresh_token;
+    //refresh token needed for db
+    const refreshToken = req.cookies['auth-cookie']?.refresh_token;
     return {
       ...payload,
       refreshToken

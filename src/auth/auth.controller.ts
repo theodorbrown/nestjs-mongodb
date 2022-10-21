@@ -32,17 +32,17 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logOut(@Request() req){
+  async logOut(@Request() req, @Res() response){
     const user = req.user;
     await this.authService.logOut(user.sub);
-    //TODO: Client remove auth-cookie !
-    //TODO: Cannot read properties of undefined (reading 'access_token') (on refresh or logout?)
-    return {success: true}
+    response.clearCookie('auth-cookie');
+    response.send({success: true})
+    response.end();
   }
 
   @UseGuards(RtAuthGuard)
-  @HttpCode(HttpStatus.OK)
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   async refreshTokens(@Request() req, @Res({ passthrough: true }) response: Response){
     const user = req.user;
     const tokens =  await this.authService.refreshTokens(user.sub, user.refreshToken);

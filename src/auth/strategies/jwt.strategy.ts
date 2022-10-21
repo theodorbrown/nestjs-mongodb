@@ -12,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           //at from cookie
-          return request?.cookies['auth-cookie'].access_token
+          return request?.cookies['auth-cookie']?.access_token
         }
       ]),
       ignoreExpiration: false,
