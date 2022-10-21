@@ -1,9 +1,10 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
+import * as cookieParser from "cookie-parser";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,13 @@ async function bootstrap() {
     //throw new exception to client and doesn't complete the operation !
     forbidNonWhitelisted: true
   }));
+  app.enableCors({
+    credentials: true,
+    origin: 'http://localhost:4200'
+  })
+  //not using https so no effect.
+  app.use(cookieParser(undefined,{ httpOnly: true }));
   await app.listen(process.env.APP_PORT);
 }
+
 bootstrap();

@@ -9,7 +9,12 @@ import { Request } from "express";
 export class RtStrategy extends PassportStrategy(Strategy, 'rt') {
   constructor(private usersService: UsersService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request: Request) => {
+          //rt from cookie
+          return request?.cookies['auth-cookie'].refresh_token
+        }
+      ]),
       ignoreExpiration: false,
       secretOrKey: rtConstants.secret,
       //get back the refreshToken : I need it to hash it and put it in db
@@ -19,7 +24,7 @@ export class RtStrategy extends PassportStrategy(Strategy, 'rt') {
 
   //payload is decoded token
   async validate(req: Request, payload: any) {
-    const refreshToken = req.get('authorization').replace('Bearer','').trim();
+    const refreshToken = req.cookies['auth-cookie'].refresh_token;
     return {
       ...payload,
       refreshToken
