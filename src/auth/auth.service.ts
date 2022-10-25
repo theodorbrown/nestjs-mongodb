@@ -60,7 +60,7 @@ export class AuthService {
 
     if (!hashMatch)
       throw new ForbiddenException("Access Denied", "No match");
-
+    //@ts-ignore
     const payload = { email: user.email, sub: user._id };
     const tokens = this.getTokens(payload);
     // @ts-ignore

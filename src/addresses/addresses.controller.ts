@@ -12,7 +12,7 @@ export class AddressesController {
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createAddressDto: CreateAddressDto, @Request() req) {
-    const userId = req.user._id;
+    const userId = req.user.sub;
     return this.addressesService.create(createAddressDto, userId);
   }
 
@@ -25,7 +25,7 @@ export class AddressesController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async findByUser(@Request() req) {
-    const userId = req.user._id;
+    const userId = req.user.sub;
     return this.addressesService.findByUser(userId);
   }
 

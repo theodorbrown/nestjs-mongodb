@@ -3,8 +3,10 @@ import mongoose, { Document, Types } from "mongoose";
 import { Roles } from "../roles/roles.enum";
 import { Address } from "../../addresses/schemas/address.schema";
 import * as dotenv from "dotenv";
+import { Wishlist } from "../../wishlists/schemas/wishlists.schema";
+import { Seller } from "../../sellers/schemas/sellers.schema";
 
-dotenv.config()
+dotenv.config();
 
 export type UserDocument = User & Document;
 
@@ -17,7 +19,6 @@ export class User {
   @Prop({ required: true })//select: false
   password: string;
 
-  //could be required false because it doesn't appear in doc (but i keep it true for user validation)
   @Prop({ required: true })
   confirm: string;
 
@@ -28,7 +29,7 @@ export class User {
   lastName: string;
 
   @Prop({ required: true, default: process.env.USER_DEFAULT_IMG })
-  profileImage: string
+  profileImage: string;
 
   @Prop({ required: true })
   age: number;
@@ -43,20 +44,24 @@ export class User {
   @Prop({ required: false, default: 0 })
   lockUntil: number;
 
-  @Prop({ required: true, default: false})
+  @Prop({ required: true, default: false })
   isPremium: boolean;
 
-  @Prop({required: true})
-  phone: string
+  @Prop({ required: true })
+  phone: string;
 
-  @Prop( { type: [mongoose.Schema.Types.ObjectId], ref: 'Address', required: true, default: null})
-  addresses: [Types.ObjectId]
+  //required: true / works because it's array???
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Address' }], required: true, default: null })
+  addresses: Address[];
 
-  @Prop( { type: mongoose.Schema.Types.ObjectId, ref: 'WishList', required: false, default: null})
-  wishList: Types.ObjectId
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: "WishList", required: false, default: null })
+  wishList: Wishlist;
 
   @Prop({ required: false, default: null })
   refreshToken: string;
+
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: "Seller", required: false, default: null })
+  sellerId: Seller;
 
   //options are used for validation and throws exception if a prop is missing or email duplicate for example.
   //ExceptionsHandler

@@ -38,12 +38,6 @@ export class CreateUserDto {
   @IsNotEmpty()
   age: number;
 
-  @IsNotEmpty()
-  @IsOptional()
-  @IsEnum(Roles)
-  @IsString()
-  role: Roles;
-
   @IsString()
   @IsNotEmpty()
   phone: string

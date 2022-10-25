@@ -4,6 +4,7 @@ import { UsersService } from "./users.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { User, UserSchema } from "./schemas/user.schema";
 import * as plugin from "./mongoose-plugins/index";
+import { Address, AddressSchema } from "../addresses/schemas/address.schema";
 
 @Module({
   //MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])
@@ -22,7 +23,8 @@ import * as plugin from "./mongoose-plugins/index";
           return schema;
         }
       }
-    ])
+    ]),
+    MongooseModule.forFeature([{ name: Address.name, schema: AddressSchema }])
   ],
   providers: [
     UsersService

@@ -4,21 +4,20 @@ import { Model } from "mongoose";
 import { Address, AddressDocument } from "./schemas/address.schema";
 import { CreateAddressDto } from "./dto/create-address.dto";
 import { HelpersService } from "../helpers/helpers.service";
+import { User, UserDocument } from "../users/schemas/user.schema";
 
 @Injectable()
 export class AddressesService {
   constructor(
     @InjectModel(Address.name) private addressModel: Model<AddressDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
     private helpersService: HelpersService
   ) {
   }
 
   async create(createAddressDto: CreateAddressDto, userId: string): Promise<Address> {
     const address = await this.addressModel.create({ ...createAddressDto, userId });
-    const populatedAddress = await address.populate("userId");
-    const user = populatedAddress.userId;
-    // @ts-ignore
-    await user.updateOne({
+    await this.userModel.updateOne({ _id: userId }, {
       $push:
         {
           addresses: address.id
@@ -50,12 +49,11 @@ export class AddressesService {
   async deleteOne(id: string) {
     this.helpersService.checkObjectId(id);
     //1. Delete address in address collection
-    const address = await this.addressModel.findByIdAndRemove({ _id: id }).populate("userId").exec();
+    const address = await this.addressModel.findByIdAndRemove({ _id: id }).exec();
     //2. Delete address ObjectId in array addresses of user collection
     if (address) {
-      const user = address.userId;
-      //@ts-ignore
-      await user.updateOne({
+      const userId = address.userId;
+      await this.userModel.updateOne({ _id: userId }, {
         $pull: {
           addresses: id
         }

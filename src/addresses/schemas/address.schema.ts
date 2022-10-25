@@ -1,4 +1,4 @@
-import mongoose, { Document, Types } from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { User } from "../../users/schemas/user.schema";
 
@@ -9,6 +9,7 @@ export class Address {
   @Prop({required: true})
   streetNumber: number
 
+  //required is if it has to be in payload
   @Prop({required: false, default:""})
   complement: string
 
@@ -28,7 +29,8 @@ export class Address {
   country: string
 
   @Prop({required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  userId: Types.ObjectId
+  //type under is completely ignored
+  userId: User
 }
 
 export const AddressSchema = SchemaFactory.createForClass(Address);

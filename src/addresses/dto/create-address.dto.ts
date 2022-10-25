@@ -1,13 +1,9 @@
-import { IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { Types } from "mongoose";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateAddressDto {
   @IsNumber()
   @IsNotEmpty()
   streetNumber: number
-
-  @IsString()
-  complement: string
 
   @IsString()
   @IsNotEmpty()
