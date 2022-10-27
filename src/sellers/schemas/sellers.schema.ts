@@ -18,7 +18,7 @@ export class Seller {
   categories: string[];
 
   @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}], required: true, default: null})
-  products: Product[];//productsIds
+  productsIds: Product[];
 
 }
 

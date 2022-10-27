@@ -4,26 +4,17 @@ import { Model } from "mongoose";
 import { Address, AddressDocument } from "./schemas/address.schema";
 import { CreateAddressDto } from "./dto/create-address.dto";
 import { HelpersService } from "../helpers/helpers.service";
-import { User, UserDocument } from "../users/schemas/user.schema";
 
 @Injectable()
 export class AddressesService {
   constructor(
     @InjectModel(Address.name) private addressModel: Model<AddressDocument>,
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
     private helpersService: HelpersService
   ) {
   }
 
-  async create(createAddressDto: CreateAddressDto, userId: string): Promise<Address> {
-    const address = await this.addressModel.create({ ...createAddressDto, userId });
-    await this.userModel.updateOne({ _id: userId }, {
-      $push:
-        {
-          addresses: address.id
-        }
-    });
-    return address;
+  async create(createAddressDto: CreateAddressDto): Promise<Address> {
+    return this.addressModel.create(createAddressDto);
   }
 
   async findAll(): Promise<Address[]> {
@@ -48,18 +39,9 @@ export class AddressesService {
 
   async deleteOne(id: string) {
     this.helpersService.checkObjectId(id);
-    //1. Delete address in address collection
-    const address = await this.addressModel.findByIdAndRemove({ _id: id }).exec();
-    //2. Delete address ObjectId in array addresses of user collection
-    if (address) {
-      const userId = address.userId;
-      await this.userModel.updateOne({ _id: userId }, {
-        $pull: {
-          addresses: id
-        }
-      });
-      return address;
-    }
-    throw new NotFoundException(`Operation canceled.`, "Address not found.");
+    const address = await this.addressModel.findById(id).exec();
+    if(address)
+      return address.remove();
+    throw new NotFoundException("Operation canceled.", "Address to delete not found.");
   }
 }

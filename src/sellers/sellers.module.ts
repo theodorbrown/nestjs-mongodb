@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { SellersService } from './sellers.service';
 import { MongooseModule } from "@nestjs/mongoose";
 import { Seller, SellerSchema } from "./schemas/sellers.schema";
+import { SellersController } from './sellers.controller';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { Seller, SellerSchema } from "./schemas/sellers.schema";
   exports : [
     MongooseModule
   ],
-  providers: [SellersService]
+  providers: [SellersService],
+  controllers: [SellersController]
 })
 export class SellersModule {}

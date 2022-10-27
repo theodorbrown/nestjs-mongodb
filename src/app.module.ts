@@ -13,6 +13,7 @@ import { ProductsModule } from './products/products.module';
 import { WishlistsModule } from './wishlists/wishlists.module';
 import { SellersModule } from './sellers/sellers.module';
 import { RatingsModule } from './ratings/ratings.module';
+import { RequestContextModule } from "nestjs-request-context";
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { RatingsModule } from './ratings/ratings.module';
     WishlistsModule,
     SellersModule,
     RatingsModule,
+    RequestContextModule
   ],//imports cannot use providers specified here in this module, they have to provide there one
   controllers: [AppController],//controllers are in same module when written here, so they can use providers
   providers: [AppService]

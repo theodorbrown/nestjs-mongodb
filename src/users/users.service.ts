@@ -3,10 +3,8 @@ import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { User, UserDocument } from "./schemas/user.schema";
 import { Connection, Model } from "mongoose";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { unlink } from "node:fs/promises";
 import * as dotenv from "dotenv";
 import { HelpersService } from "../helpers/helpers.service";
-import { Address, AddressDocument } from "../addresses/schemas/address.schema";
 
 dotenv.config();
 
@@ -14,7 +12,6 @@ dotenv.config();
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-    @InjectModel(Address.name) private addressModel: Model<AddressDocument>,
     @InjectConnection() private connection: Connection,
     private helpersService: HelpersService
   ) {
@@ -57,16 +54,13 @@ export class UsersService {
 
   async delete(id: string) {
     this.helpersService.checkObjectId(id);
-    //1. Find user
-    const user = await this.findOne({ _id: id });
-    //2. Delete all his addresses in addresses collection
-    await this.addressModel.deleteMany({ userId: id });
-    //3. Delete profile pic if he has one
-    if (user.profileImage !== process.env.USER_DEFAULT_IMG)
-      await unlink(process.env.IMAGES_PATH + user.profileImage);
-    //4. Delete user
-    //@ts-ignore
-    return await user.deleteOne().exec();
+    const user = await this.userModel.findById(id);
+    if(user.sellerId)
+      throw new NotFoundException("Operation canceled.", "User is a seller.");
+
+    if(user)
+      return user.remove();
+    throw new NotFoundException("Operation canceled.", "User to delete not found.");
   }
 
   //helper

@@ -30,7 +30,6 @@ export class AuthController {
     return user;
   }
 
-
   @UseGuards(JwtAuthGuard)
   @Post("logout")
   @HttpCode(HttpStatus.OK)

@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Document, Types } from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { Roles } from "../roles/roles.enum";
 import { Address } from "../../addresses/schemas/address.schema";
 import * as dotenv from "dotenv";
 import { Wishlist } from "../../wishlists/schemas/wishlists.schema";
 import { Seller } from "../../sellers/schemas/sellers.schema";
+import * as plugin from "../mongoose-plugins/index"
 
 dotenv.config();
 
@@ -55,7 +56,7 @@ export class User {
   addresses: Address[];
 
   @Prop({type: mongoose.Schema.Types.ObjectId, ref: "WishList", required: false, default: null })
-  wishList: Wishlist;
+  wishListId: Wishlist;
 
   @Prop({ required: false, default: null })
   refreshToken: string;
@@ -69,4 +70,3 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-

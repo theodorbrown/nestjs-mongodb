@@ -28,9 +28,8 @@ export class Address {
   @Prop({required: true})
   country: string
 
-  @Prop({required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  //type under is completely ignored
-  userId: User
+ /* @Prop({required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  userId: User*/
 }
 
 export const AddressSchema = SchemaFactory.createForClass(Address);

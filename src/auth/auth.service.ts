@@ -1,5 +1,5 @@
-import { ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { User, UserDocument } from "../users/schemas/user.schema";
+import { ForbiddenException, Injectable } from "@nestjs/common";
+import { User, UserDocument} from "../users/schemas/user.schema";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { JwtService } from "@nestjs/jwt";
@@ -7,6 +7,7 @@ import { UsersService } from "../users/users.service";
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { jwtConstants, rtConstants } from "./constants";
 import * as argon2 from "argon2";
+
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
 
   //is called by the guard
   async validateUser(email: string, pass: string): Promise<any> {
-    // @ts-ignore
+    //@ts-ignore
     return this.userModel.getAuthenticated(email, pass);
   }
 
@@ -27,7 +28,7 @@ export class AuthService {
   async login(user: any) {
     const payload = { email: user.email, sub: user._id };
     const tokens = this.getTokens(payload);
-    // @ts-ignore
+
     await this.hashRt(user._id, tokens.refresh_token);
 
     return tokens;
