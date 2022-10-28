@@ -22,12 +22,6 @@ export class AddressesService {
     //[] if none
   }
 
-  async findByUser(usrId: string): Promise<Address[]> {
-    this.helpersService.checkObjectId(usrId);
-    return this.addressModel.find({ userId: usrId }).exec();
-    //[] if none
-  }
-
   async findOne(id: string): Promise<Address> {
     this.helpersService.checkObjectId(id);
     const address = await this.addressModel.findOne({ _id: id }).exec();

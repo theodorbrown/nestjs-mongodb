@@ -2,6 +2,7 @@ import mongoose, { Document } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Seller } from "../../sellers/schemas/sellers.schema";
 import { Rating } from "../../ratings/schemas/ratings.scheama";
+import { Colors } from "../colors/colors.enum";
 
 export type ProductDocument = Product & Document;
 
@@ -21,13 +22,13 @@ export class Product {
   category: string;
 
   @Prop({ required: true })
-  price: string;
+  price: number;
 
   @Prop({ required: true, default: "none" })
   brand: string;
 
-  @Prop({ required: true, default: "black" })
-  color: string;
+  @Prop({ required: true, default: Colors.BLACK })
+  colors: Colors[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Seller", required: true, default: "Keane's Shop" })
   sellerId: Seller;//Seller ou Types.ObjectId?

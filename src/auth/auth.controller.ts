@@ -33,7 +33,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post("logout")
   @HttpCode(HttpStatus.OK)
-  async logOut(@Request() req, @Res() response) {
+  async logOut(@Request() req, @Res() response: Response) {
     const user = req.user;
     await this.authService.logOut(user.sub);
     response.clearCookie("auth-cookie");

@@ -22,13 +22,6 @@ export class AddressesController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  async findByUser(@Request() req) {
-    const userId = req.user.sub;
-    return this.addressesService.findByUser(userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Get(":id")
   async findOne(@Param("id") id: string) {
     return this.addressesService.findOne(id);

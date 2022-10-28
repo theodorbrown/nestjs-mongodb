@@ -18,19 +18,16 @@ export class AuthService {
   ) {
   }
 
-  //is called by the guard
+  //Called by local strat guard in validate method
   async validateUser(email: string, pass: string): Promise<any> {
     //@ts-ignore
     return this.userModel.getAuthenticated(email, pass);
   }
 
-  //is called after guard in controller
   async login(user: any) {
     const payload = { email: user.email, sub: user._id };
     const tokens = this.getTokens(payload);
-
     await this.hashRt(user._id, tokens.refresh_token);
-
     return tokens;
   }
 

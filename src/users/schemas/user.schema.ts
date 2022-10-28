@@ -37,7 +37,7 @@ export class User {
 
   //fixing type doesn't change shit best is to fix it in dto
   @Prop({ enum: Roles, default: Roles.USER, required: true })
-  role: string;
+  role: Roles;
 
   @Prop({ required: true, default: 0 })
   loginAttempts: number;

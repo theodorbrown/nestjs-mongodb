@@ -1,16 +1,4 @@
-import {
-  IsArray,
-  IsBoolean,
-  IsEmail,
-  IsEnum,
-  IsMongoId,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString
-} from "class-validator";
-import { Roles } from "../roles/roles.enum";
-import { Types } from "mongoose";
+import { IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateUserDto {
   @IsString()
@@ -40,5 +28,5 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  phone: string
+  phone: string;
 }
